@@ -41,6 +41,9 @@
 
     <section class="table-section">
         <h2>Lista de Empleados</h2>
+        <div class="error" *ngIf="deleteMessage">
+            {{ deleteMessage }}
+        </div>
         <table>
             <thead>
                 <tr>

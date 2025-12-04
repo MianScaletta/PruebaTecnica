@@ -21,6 +21,7 @@ export class Inventario implements OnInit {
   public items = signal<InventarioDTO[]>([]);
 
   public validationMessage: string | null = null;
+  public deleteMessage: string | null = null;
 
   public editingSku: string | null = null;
 
@@ -108,8 +109,15 @@ export class Inventario implements OnInit {
 
   public deleteItem(sku: string) {
     this.api.deleteInventario(sku).subscribe({
-      next: () => { this.load() },
-      error: (err) => console.error('Error eliminando inventario', err),
+      next: () => {
+        this.load();
+        this.deleteMessage = null;
+      },
+      error: (err) => {
+        console.error('Error eliminando inventario', err);
+        this.deleteMessage = 'No se puede eliminar: esta asociado a una poliza';
+        setTimeout(() => this.deleteMessage = null, 6000);
+      },
     });
   }
 

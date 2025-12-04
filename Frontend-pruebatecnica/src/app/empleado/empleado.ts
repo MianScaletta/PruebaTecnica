@@ -22,6 +22,7 @@ export class Empleado implements OnInit {
   public items = signal<EmpleadoDTO[]>([]);
 
   public validationMessage: string | null = null;
+  public deleteMessage: string | null = null;
 
   public editingId: string | null = null;
 
@@ -112,8 +113,15 @@ export class Empleado implements OnInit {
 
   public deleteItem(id?: string) {
     this.api.deleteEmpleado(id!).subscribe({
-      next: () => { this.load() },
-      error: (err) => console.error('Error eliminando empleado', err),
+      next: () => {
+        this.load();
+        this.deleteMessage = null;
+      },
+      error: (err) => {
+        console.error('Error eliminando empleado', err);
+        this.deleteMessage = 'No se puede eliminar: esta asociado a una poliza';
+        setTimeout(() => this.deleteMessage = null, 6000);
+      },
     });
   }
 
