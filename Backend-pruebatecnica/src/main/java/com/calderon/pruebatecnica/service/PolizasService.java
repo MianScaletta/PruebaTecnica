@@ -1,7 +1,5 @@
 package com.calderon.pruebatecnica.service;
 
-import org.springframework.data.domain.Page;
-
 import com.calderon.pruebatecnica.models.Poliza;
 
 import java.util.List;
