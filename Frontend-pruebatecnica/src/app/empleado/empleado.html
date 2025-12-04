@@ -1,0 +1,75 @@
+<div class="inventory-container">
+    <section class="form-section">
+        <h2>{{ editingId ? 'Editar Inventario' : 'Nuevo Item' }}</h2>
+        <form [formGroup]="empleadoForm" (ngSubmit)="editingId ? updateItem() : addItem()">
+            <div class="field">
+                <label>Nombre</label>
+                <input name="nombre" formControlName="nombre" pattern="^[^0-9]+$" required pattern="^[^0-9]+$" />
+                <div class="error" *ngIf="empleadoForm.get('nombre')?.invalid && empleadoForm.get('nombre')?.touched">
+                    <small *ngIf="empleadoForm.get('nombre')?.errors?.['required']">Nombre es requerido.</small>
+                    <small *ngIf="empleadoForm.get('nombre')?.errors?.['pattern']">Nombre no puede contener
+                        números.</small>
+                </div>
+            </div>
+            <div class="field">
+                <label>Apellido</label>
+                <input name="apellido" formControlName="apellido" required pattern="^[^0-9]+$" />
+                <div class="error"
+                    *ngIf="empleadoForm.get('apellido')?.invalid && empleadoForm.get('apellido')?.touched">
+                    <small *ngIf="empleadoForm.get('apellido')?.errors?.['required']">Apellido es requerido.</small>
+                    <small *ngIf="empleadoForm.get('apellido')?.errors?.['pattern']">Apellido no puede contener
+                        números.</small>
+                </div>
+            </div>
+            <div class="field">
+                <label>Puesto</label>
+                <input name="puesto" formControlName="puesto" required pattern="^[^0-9]+$" />
+                <div class="error" *ngIf="empleadoForm.get('puesto')?.invalid && empleadoForm.get('puesto')?.touched">
+                    <small *ngIf="empleadoForm.get('puesto')?.errors?.['required']">Puesto es requerido.</small>
+                    <small *ngIf="empleadoForm.get('puesto')?.errors?.['pattern']">Puesto no puede contener
+                        números.</small>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit" [disabled]="empleadoForm.invalid">
+                    {{ editingId ? 'Actualizar' : 'Agregar' }}
+                </button>
+                <button type="button" class="secondary" (click)="cancelEdit()">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="table-section">
+        <h2>Lista de Empleados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Puesto</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (i of items(); track i.idEmpleado;) {
+                <tr>
+                    <td>{{ i.idEmpleado }}</td>
+                    <td>{{ i.nombre }}</td>
+                    <td>{{ i.apellido }}</td>
+                    <td>{{ i.puesto }}</td>
+                    <td class="row-actions">
+                        <button (click)="editItem(i)">Editar</button>
+                        <button class="danger" (click)="deleteItem(i.idEmpleado)">Eliminar</button>
+                    </td>
+                </tr>
+                }
+                @if (items().length === 0) {
+                <tr>
+                    <td colspan="5" class="empty">No hay Empleados.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>

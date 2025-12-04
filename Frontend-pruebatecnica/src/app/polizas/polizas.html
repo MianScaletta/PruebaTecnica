@@ -1,0 +1,79 @@
+<div class="polizas-container">
+    <section class="form-section">
+        <h2>{{ editingId ? 'Editar Póliza' : 'Nueva Póliza' }}</h2>
+        <form [formGroup]="polizaForm" (ngSubmit)="editingId ? updatePoliza() : addPoliza()">
+            <div class="field">
+                <label>Empleado</label>
+                <select name="idEmpleado" formControlName="idEmpleado" required>
+                    <option [ngValue]="null">-- Seleccione empleado --</option>
+                    <option *ngFor="let e of empleados" [ngValue]="e.idEmpleado">{{ e.nombre }} {{ e.apellido }} ({{
+                        e.idEmpleado }})</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>SKU</label>
+                <select name="sku" formControlName="sku" required>
+                    <option [ngValue]="null">-- Seleccione SKU --</option>
+                    <option *ngFor="let inv of inventarios" [ngValue]="inv.sku">{{ inv.nombre }} - {{ inv.sku }}
+                    </option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Cantidad</label>
+                <input name="cantidad" type="number" formControlName="cantidad" required min="1" />
+                <div class="error" *ngIf="polizaForm.get('cantidad')?.invalid && polizaForm.get('cantidad')?.touched">
+                    <small *ngIf="polizaForm.get('cantidad')?.errors?.['required']">Cantidad es requerida.</small>
+                    <small *ngIf="polizaForm.get('cantidad')?.errors?.['min']">Cantidad debe ser mayor a 0.</small>
+                </div>
+                <div class="error" *ngIf="isCantidadExceedsStockReactive()">
+                    <small>La cantidad excede el stock disponible ({{ getStockForSku(polizaForm.get('sku')?.value)
+                        }}).</small>
+                </div>
+            </div>
+            <div class="field">
+                <label>Fecha</label>
+                <input name="fecha" type="date" formControlName="fecha" required />
+            </div>
+            <div class="actions">
+                <button type="submit" [disabled]="polizaForm.invalid">
+                    {{ editingId ? 'Actualizar' : 'Agregar' }}
+                </button>
+                <button type="button" class="secondary" (click)="cancelEdit()">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="table-section">
+        <h2>Listado de Pólizas</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Póliza</th>
+                        <th>Empleado</th>
+                        <th>Inventario</th>
+                        <th>Cantidad</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of items()" [attr.data-id]="i.idPoliza">
+                        <td>{{ i.idPoliza }}</td>
+                        <td>{{ empleadoNombre(i.idEmpleado) || i.idEmpleado }}</td>
+                        <td>{{ inventarioNombre(i.sku) || i.sku }}</td>
+                        <td>{{ i.cantidad }}</td>
+                        <td>{{ i.fecha | date: 'shortDate' }}</td>
+                        <td class="row-actions">
+                            <button (click)="editPoliza(i)">Editar</button>
+                            <button class="danger" (click)="deletePoliza(i.idPoliza!)">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="items().length === 0">
+                        <td colspan="6" class="empty">No hay pólizas registradas.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,64 @@
+<div class="inventory-container">
+    <section class="form-section">
+        <h2>{{ editingSku ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+        <form [formGroup]="inventarioForm" (ngSubmit)="editingSku ? updateItem() : addItem()">
+            <div class="field">
+                <label>Nombre</label>
+                <input name="nombre" formControlName="nombre" required pattern="^[^0-9]+$" />
+                <div class="error"
+                    *ngIf="inventarioForm.get('nombre')?.invalid && inventarioForm.get('nombre')?.touched">
+                    <small *ngIf="inventarioForm.get('nombre')?.errors?.['required']">Nombre es requerido.</small>
+                    <small *ngIf="inventarioForm.get('nombre')?.errors?.['pattern'] ">Nombre no puede contener
+                        números.</small>
+                </div>
+            </div>
+            <div class="field">
+                <label>Cantidad</label>
+                <input name="cantidad" formControlName="cantidad" type="number" required min="1" />
+                <div class="error"
+                    *ngIf="inventarioForm.get('cantidad')?.invalid && inventarioForm.get('cantidad')?.touched">
+                    <small *ngIf="inventarioForm.get('cantidad')?.errors?.['required']">Cantidad es requerida.</small>
+                    <small *ngIf="inventarioForm.get('cantidad')?.errors?.['min']">Cantidad debe ser 0 o mayor.</small>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit" [disabled]="inventarioForm.invalid">
+                    {{ editingSku ? 'Actualizar' : 'Agregar' }}
+                </button>
+                <button type="button" class="secondary" (click)="cancelEdit()">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="table-section">
+        <h2>Inventario</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (i of items(); track i.sku;) {
+                <tr>
+                    <td>{{ i.sku }}</td>
+                    <td>{{ i.nombre }}</td>
+                    <td>{{ i.cantidad }}</td>
+                    <td class="row-actions">
+                        <button (click)="editItem(i)">Editar</button>
+                        <button class="danger" (click)="deleteItem(i.sku!)">Eliminar</button>
+                    </td>
+                </tr>
+                }
+                @if (items().length === 0) {
+                <tr>
+                    <td colspan="4" class="empty">No hay productos en el inventario.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>
