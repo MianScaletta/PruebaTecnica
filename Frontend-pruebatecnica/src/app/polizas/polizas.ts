@@ -21,8 +21,8 @@ export class Polizas implements OnInit {
 
 
   public items = signal<PolizaDTO[]>([]);
-  public empleados: EmpleadoDTO[] = [];
-  public inventarios: InventarioDTO[] = [];
+  public empleados = signal<EmpleadoDTO[]>([]);
+  public inventarios = signal<InventarioDTO[]>([]);
   public validationMessage: string | null = null;
 
   public editingId: string | null = null;
@@ -31,7 +31,7 @@ export class Polizas implements OnInit {
 
   ngOnInit(): void {
     this.load();
-    this.loadAuxData();
+    this.loadEmpleadoAndInventario();
   }
 
   public load() {
@@ -41,14 +41,14 @@ export class Polizas implements OnInit {
     });
   }
 
-  public loadAuxData() {
+  public loadEmpleadoAndInventario() {
     this.api.listEmpleados().subscribe({
-      next: (data) => (this.empleados = data),
+      next: (data) => (this.empleados.set(data)),
       error: (err) => console.error('Error cargando empleados', err),
     });
 
     this.api.listInventario().subscribe({
-      next: (data) => (this.inventarios = data),
+      next: (data) => (this.inventarios.set(data)),
       error: (err) => console.error('Error cargando inventario', err),
     });
   }
@@ -155,20 +155,20 @@ export class Polizas implements OnInit {
 
   public getStockForSku(sku?: string | null): number {
     if (!sku) return 0;
-    const found = this.inventarios.find(i => String(i.sku) === String(sku));
+    const found = this.inventarios().find(i => String(i.sku) === String(sku));
     return found ? Number(found.cantidad) : 0;
   }
 
   public empleadoNombre(id?: string | null): string {
     if (!id) return '';
-    const found = this.empleados.find(e => String(e.idEmpleado) === String(id));
+    const found = this.empleados().find(e => String(e.idEmpleado) === String(id));
     if (!found) return String(id);
     return `${found.nombre}${found.apellido ? ' ' + found.apellido : ''}`.trim();
   }
 
   public inventarioNombre(sku?: string | null): string {
     if (!sku) return '';
-    const found = this.inventarios.find(i => String(i.sku) === String(sku));
+    const found = this.inventarios().find(i => String(i.sku) === String(sku));
     if (!found) return String(sku);
     return found.nombre ?? String(sku);
   }

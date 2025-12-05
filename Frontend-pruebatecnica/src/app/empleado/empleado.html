@@ -1,6 +1,6 @@
 <div class="inventory-container">
     <section class="form-section">
-        <h2>{{ editingId ? 'Editar Inventario' : 'Nuevo Item' }}</h2>
+        <h2>{{ editingId ? 'Editar Empleado' : 'Nuevo Empleado' }}</h2>
         <form [formGroup]="empleadoForm" (ngSubmit)="editingId ? updateItem() : addItem()">
             <div class="field">
                 <label>Nombre</label>

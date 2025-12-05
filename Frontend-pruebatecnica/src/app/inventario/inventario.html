@@ -18,7 +18,7 @@
                 <div class="error"
                     *ngIf="inventarioForm.get('cantidad')?.invalid && inventarioForm.get('cantidad')?.touched">
                     <small *ngIf="inventarioForm.get('cantidad')?.errors?.['required']">Cantidad es requerida.</small>
-                    <small *ngIf="inventarioForm.get('cantidad')?.errors?.['min']">Cantidad debe ser 0 o mayor.</small>
+                    <small *ngIf="inventarioForm.get('cantidad')?.errors?.['min']">Cantidad debe ser mayor a 0.</small>
                 </div>
             </div>
             <div class="actions">

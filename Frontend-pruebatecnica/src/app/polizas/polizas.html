@@ -6,7 +6,7 @@
                 <label>Empleado</label>
                 <select name="idEmpleado" formControlName="idEmpleado" required>
                     <option [ngValue]="null">-- Seleccione empleado --</option>
-                    <option *ngFor="let e of empleados" [ngValue]="e.idEmpleado">{{ e.nombre }} {{ e.apellido }} ({{
+                    <option *ngFor="let e of empleados()" [ngValue]="e.idEmpleado">{{ e.nombre }} {{ e.apellido }} ({{
                         e.idEmpleado }})</option>
                 </select>
             </div>
@@ -14,7 +14,7 @@
                 <label>SKU</label>
                 <select name="sku" formControlName="sku" required>
                     <option [ngValue]="null">-- Seleccione SKU --</option>
-                    <option *ngFor="let inv of inventarios" [ngValue]="inv.sku">{{ inv.nombre }} - {{ inv.sku }}
+                    <option *ngFor="let inv of inventarios()" [ngValue]="inv.sku">{{ inv.nombre }} - {{ inv.sku }}
                     </option>
                 </select>
             </div>
